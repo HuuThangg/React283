@@ -23,10 +23,10 @@ export default class gioHang extends React.Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <View style={styles.row}>
+                {/* <View style={styles.row}>
                     <Image source={require('../images/back.png')} style={styles.img} />
                     <Text style={styles.title}>Giỏ hàng</Text>
-                </View>
+                </View> */}
                 <View style={{ backgroundColor: '#DFDFDF', flex: 1 }}>
                     <FlatList
                         data={Du_lieu.Gio_hang}

@@ -1,12 +1,30 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity,Alert } from 'react-native'
 
 class register extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
+        this.state={
+            email:'',
+            matkhau:'',
+            confimmatkhau:''
+        }
     }
-    state = {}
+    KiemTra(){
+        
+        if(this.state.email == '' && this.state.matkhau== '')
+        Alert.alert("vui lòng nhập thông tin đăng ký")
+        else 
+        if(this.state.matkhau != this.state.confimmatkhau)
+        Alert.alert("mật khẩu không khớp")
+        else 
+        if(this.state.email!='' && this.state.matkhau !='')
+        this.props.navigation.navigate('HomeScreen')
+        else
+        Alert.alert("đăng ký thất bại")
+    }
     render() {
+        const { navigate } = this.props.navigation;
         return (
             <View>
                 <View>
@@ -19,25 +37,33 @@ class register extends React.Component {
                             source={require('../images/mail.png')} />
                         <TextInput
                             //style={styles.textinput}
-                            placeholder="Email" />
+                            placeholder="Email"
+                            onChangeText={(email) => this.setState({ email })}
+                            value={this.state.email} />
                     </View>
                     <View style={[{ flexDirection: 'row' }, styles.textinput]}>
                     <Image style={{ width: 30, height: 30, marginTop: 5 }}
                             source={require('../images/lock.png')} />
                         <TextInput
                             //style={styles.textinput}
-                            placeholder="Password" />
+                            placeholder="Password"
+                            onChangeText={(matkhau) => this.setState({ matkhau })}
+                            value={this.state.matkhau} 
+                            secureTextEntry/>
                     </View>
                     <View style={[{ flexDirection: 'row' }, styles.textinput]}>
                     <Image style={{ width: 30, height: 30, marginTop: 5 }}
                             source={require('../images/lock.png')} />
                         <TextInput
                             //style={styles.textinput}
-                            placeholder="Confirm Password" />
+                            placeholder="Confirm Password" 
+                            onChangeText={(confimmatkhau) => this.setState({ confimmatkhau })}
+                            value={this.state.confimmatkhau}
+                            secureTextEntry/>
                     </View>
                 </View>
                 <View>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity onPress={this.KiemTra.bind(this)} style={styles.button}>
                         <Text style={{ alignSelf: "center", color: '#fff' }}>REGISTER</Text>
                     </TouchableOpacity>
                 </View>

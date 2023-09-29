@@ -1,26 +1,63 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native';
-import Du_lieu from '../data/Du_lieu'
+const URL_server=`http://mqsoft.ddns.net:6767`
+import api from '../api.services'
+import duLieu from "../data/duLieu";
+
 
 export default class welcome extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            email: '',
-            matKhau: '',
-            thongBao: ''
+            userid: 'tannv',
+            matKhau: '2468:<00()*+,-./0123456789:;<=>FFFFF',
+            thongBao: '',
+            makp:''
         }
     }
-    XL_Nhan() {
-        if (this.state.email == Du_lieu.Nguoi_dung.Ten_Dang_nhap &&
-            this.state.matKhau == Du_lieu.Nguoi_dung.Mat_khau)
-            this.setState({"thongBao":"Đăng nhập thành công"})
-        else
-            this.setState({"thongBao":"Đăng nhập thất bại"})
+    KiemTraDangNhap(){
+        
+        fetch(`${URL_server}/EmrUseridLogin/GetEmrUseridLogin`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userid: 'tannv',
+                password: '2468:<00()*+,-./0123456789:;<=>FFFFF'
+            })
+        })
+        .then((response) => response.json())
+        .then((responseData) => {
+           // debugger
+           this.state.makp =responseData.makp
+            if (responseData.userid != this.state.userid) {
+                this.setState({"thongBao":"Đăng nhập thất bại"}) 
+            }else{
+                //this.setState({"thongBao":"Đăng nhập thành công"})
+                //this.props.navigation.navigate('benhAn')
+                this.props.navigation.navigate("benhAn", {"benhAn": this.state})
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
     }
+
+    
+    // componentDidMount(){
+    //     api.get(`${URL_server}/EmrUseridLogin/hash-password?password=${this.state.matKhau}`)
+    //     .then(data => {
+    //         console.log(data)
+    //       })
+    //     .catch(err=>{
+    //         console.log(err)
+    //     })
+    // }
+ 
     render() {
         return (
-
             <View style={styles.main}>
                 <Image style={styles.images}
                     source={require('../images/user.png')} />
@@ -29,25 +66,27 @@ export default class welcome extends React.Component {
                     <Text style={styles.titles}>Speak, friend and enter</Text>
                 </View>
                 <View>
-                    <TextInput onChangeText={(email) => this.setState({ email })}
-                        value={this.state.email}
+                    <TextInput onChangeText={(userid) => this.setState({ userid })}
+                        value={this.state.userid}
                         style={styles.button}
-                        placeholder='Email'>
+                        placeholder='User'>
                     </TextInput>
                     <TextInput onChangeText={(matKhau) => this.setState({ matKhau })}
                         value={this.state.matKhau}
                         style={styles.button}
-                        placeholder='Password'>
+                        placeholder='Password'
+                        secureTextEntry >
                     </TextInput>
                 </View>
-                <TouchableOpacity onPress={this.XL_Nhan.bind(this)} activeOpacity={0.5}
+                <TouchableOpacity onPress={this.KiemTraDangNhap.bind(this)} activeOpacity={0.5}
                     style={styles.button_sgin}>
                     <Text style={styles.button_sgintext}>SGIN IN</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity >
                     <Text style={styles.register}>Register ?</Text>
                 </TouchableOpacity>
                 <Text style={styles.thongbao}>{this.state.thongBao}</Text>
+                
             </View>
         )
     }
